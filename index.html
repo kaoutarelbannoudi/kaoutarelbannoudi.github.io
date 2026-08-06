@@ -17,13 +17,13 @@
 
 <style>
   :root{
-    --bg:#0A0E17;
+    --bg:#140a16;
     --surface:#111726;
     --surface-2:#161D2F;
     --line:rgba(255,255,255,.09);
     --text:#E8ECF5;
-    --muted:#8A94AC;
-    --accent:#FFB347;
+    --muted:#a5b2cf;
+    --accent:#BF00FF;
     --max:1080px;
     --display:"Space Grotesk",system-ui,sans-serif;
     --body:"IBM Plex Sans",system-ui,sans-serif;
@@ -41,7 +41,7 @@
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
   .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
 
-  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);line-height:1.7}
   .section-label{
     font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
     padding-bottom:14px;margin-bottom:38px;border-bottom:1px solid var(--line);
@@ -90,7 +90,7 @@
   .hero h1{
     font-family:var(--display);font-weight:700;
     font-size:clamp(2.5rem,7.2vw,4.4rem);line-height:1.02;letter-spacing:-.035em;
-    margin:18px 0 14px;max-width:13ch;
+    margin:18px 0 22px;max-width:13ch;
   }
   .hero h1 em{font-style:normal;color:var(--accent)}
   .role{font-family:var(--mono);font-size:.85rem;color:var(--muted);margin-bottom:24px;letter-spacing:.02em}
@@ -217,31 +217,34 @@
     <canvas id="cluster" aria-hidden="true"></canvas>
     <div class="wrap hero-grid">
      <div>
-      <p class="eyebrow">hello · bonjour · مرحبا</p>
+      <p class="eyebrow">Data Engineer · Machine Learning Engineer · AI Engineer</p>
       <h1>Kaoutar <em>El Bannoudi</em></h1>
-      <p class="role">Data Engineer · Machine Learning Engineer · AI Engineer</p>
       <p class="lede">
-        I build <strong>cloud data pipelines</strong> on Azure and <strong>machine learning systems
-        that actually reach production</strong> — from raw ingestion to real-time inference.
-        Currently a PhD student in AI. Welcome to my portfolio.
+        Hi there! I turn scattered, messy data into systems people can actually rely on,
+        and I'm currently a PhD student in AI. Explore my journey, take a look at my projects,
+        and let's connect to build something together.
       </p>
 
       <div class="actions">
         <a class="btn btn-solid" href="mailto:elbankawtar@gmail.com">Say hello</a>
-        <a class="btn btn-ghost" href="#projects">See my work</a>
         <!-- Upload your PDF resume to the repository root as CV.pdf -->
-        <a class="btn btn-ghost" href="CV.pdf" target="_blank" rel="noopener">My CV</a>
+        <a class="btn btn-ghost" href="CV_kaoutarelbannoudi_work.pdf" target="_blank" rel="noopener">My CV</a>
       </div>
 
-      <div class="stats">
+     <!-- <div class="stats">
         <div class="stat"><b>Azure</b><span>Primary cloud stack</span></div>
         <div class="stat"><b>4 years</b><span>Hands-on experience</span></div>
         <div class="stat"><b>PhD</b><span>AI research in progress</span></div>
-      </div>
-     </div>
+      </div>--> 
+     </div> 
 
+     <!-- ✏️ PHOTO — two ways to point to your image:
+          1) Local file (current): keep photo.jpg next to index.html in the same folder.
+          2) Online image: replace src="photo.jpg" with the full URL, e.g.
+             src="https://raw.githubusercontent.com/kaoutarelbannoudi/kaoutarelbannoudi.github.io/main/photo.jpg"
+          To use a different local photo, just rename your file to photo.jpg. -->
      <figure class="portrait">
-       <img src="/home/kaoutar/Desktop/portfolio/picture.png" alt="Portrait of Kaoutar El Bannoudi" width="760" height="949">
+       <img src="picture.png" alt="Portrait of Kaoutar El Bannoudi" width="760" height="949">
      </figure>
     </div>
   </div>
@@ -541,32 +544,56 @@
 
         <article class="cert reveal">
           <div class="issuer">Issuing organisation</div>
-          <h3>Certificate title goes here</h3>
+          <h3>Certificate Oracle University</h3>
           <p style="color:var(--muted);font-size:.9rem">
-            One short line on what the certificate covers, or the key skills it validates.
+             Agentic AI Certified Foundations Associate.
           </p>
-          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
-          <div class="meta">Issued 2025 · ID 000000</div>
+          <a class="verify" href="https://catalog-education.oracle.com/pls/certview/sharebadge?id=FC6DD61715800F4EFF7CFEBC7E1B22C43D060635DAAD27FC6666A42EF6E4720B" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2026 </div>
         </article>
 
         <article class="cert reveal">
           <div class="issuer">Issuing organisation</div>
-          <h3>Certificate title goes here</h3>
+          <h3>2ND INTERNATTIONAL SUMMER SCHOOL ON ARTIFICIAL INTELLIGENCE</h3>
           <p style="color:var(--muted);font-size:.9rem">
-            One short line on what the certificate covers, or the key skills it validates.
+            Participation In the 2nd international Summer School on Artificial Intelligence of the Franco-Moroccan Research Center 2026 on the theme of "Inclusive and Responsible Artificial Intelligence for Socio-Technical Impact on Global Challenges".
           </p>
-          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
-          <div class="meta">Issued 2025 · ID 000000</div>
+          <div class="meta">Issued 2026 </div>
+        </article>
+
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate IBM</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+          Python for Data Science AI and Development          </p>
+          <div class="meta">Issued 2024</div>
         </article>
 
         <article class="cert reveal">
           <div class="issuer">Issuing organisation</div>
-          <h3>Certificate title goes here</h3>
+          <h3>Certificate crewAI</h3>
           <p style="color:var(--muted);font-size:.9rem">
-            One short line on what the certificate covers, or the key skills it validates.
-          </p>
-          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
-          <div class="meta">Issued 2024 · ID 000000</div>
+         Multi AI Agent Systems with crewAI         </p>
+          <div class="meta">Issued 2025</div>
+        </article>
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate FreeCodeCamp</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+           Data Analysis With Python          </p>
+          <a class="verify" href="https://freecodecamp.org/certification/kaoutar_el_bannoudi/data-analysis-with-python-v7" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2021</div>
+        </article>
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate FreeCodeCamp</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+           Legacy JavaScript Algorithms and Data Structures       </p>
+          <a class="verify" href="https://freecodecamp.org/certification/kaoutar_el_bannoudi/javascript-algorithms-and-data-structures" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2022</div>
         </article>
 
       </div>
