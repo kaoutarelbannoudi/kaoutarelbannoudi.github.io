@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kaoutar El Bannoudi — Data Engineer</title>
+<meta name="description" content="Data engineer building cloud pipelines on Azure: ETL, Medallion architecture, Spark and Databricks. Background in machine learning and AI research.">
+
+<meta property="og:title" content="Kaoutar El Bannoudi — Data Engineer">
+<meta property="og:description" content="Cloud data pipelines on Azure — ETL, Spark, Databricks, Synapse — with a machine learning and MLOps background.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0A0E17;
+    --surface:#111726;
+    --surface-2:#161D2F;
+    --line:rgba(255,255,255,.09);
+    --text:#E8ECF5;
+    --muted:#8A94AC;
+    --accent:#FFB347;
+    --max:1080px;
+    --display:"Space Grotesk",system-ui,sans-serif;
+    --body:"IBM Plex Sans",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:var(--body);font-size:16.5px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .section-label{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    padding-bottom:14px;margin-bottom:38px;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .section-label span{color:rgba(255,255,255,.22)}
+
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:rgba(10,14,23,.78);backdrop-filter:blur(12px);
+    border-bottom:1px solid transparent;transition:border-color .3s;
+  }
+  header.scrolled{border-bottom-color:var(--line)}
+  .bar{display:flex;justify-content:space-between;align-items:center;height:64px;gap:20px}
+  .logo{font-family:var(--mono);font-size:.85rem;letter-spacing:.04em;white-space:nowrap}
+  .logo b{color:var(--accent);font-weight:500}
+  nav{display:flex;gap:22px;font-size:.86rem;color:var(--muted)}
+  nav a{transition:color .2s;white-space:nowrap}
+  nav a:hover{color:var(--text)}
+  @media(max-width:860px){nav{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:104px 0 60px}
+  #cluster{
+    position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.85;
+    mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 80%,transparent);
+    -webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 80%,transparent);
+  }
+  .hero .wrap{position:relative;z-index:1;width:100%}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+  .portrait{position:relative;justify-self:end;width:100%;max-width:320px}
+  .portrait::after{
+    content:"";position:absolute;inset:0;border-radius:14px;
+    border:1px solid rgba(255,179,71,.55);transform:translate(14px,14px);pointer-events:none;
+  }
+  .portrait img{
+    position:relative;z-index:1;display:block;width:100%;height:auto;
+    border-radius:14px;border:1px solid var(--line);filter:saturate(.94) contrast(1.03);
+  }
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:34px}
+    .portrait{justify-self:start;max-width:168px;order:-1}
+    .portrait::after{transform:translate(10px,10px)}
+    #cluster{opacity:.5}
+  }
+  .hero h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.5rem,7.2vw,4.4rem);line-height:1.02;letter-spacing:-.035em;
+    margin:18px 0 14px;max-width:13ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .role{font-family:var(--mono);font-size:.85rem;color:var(--muted);margin-bottom:24px;letter-spacing:.02em}
+  .lede{font-size:1.06rem;color:var(--muted);max-width:50ch;margin-bottom:34px}
+  .lede strong{color:var(--text);font-weight:500}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+  .btn{display:inline-block;padding:12px 22px;border-radius:6px;font-size:.92rem;font-weight:500;
+       transition:transform .18s,background .2s,border-color .2s,color .2s}
+  .btn-solid{background:var(--accent);color:#0A0E17}
+  .btn-solid:hover{transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  .stats{display:flex;gap:38px;flex-wrap:wrap;font-family:var(--mono)}
+  .stat b{display:block;font-size:1.35rem;font-weight:500;color:var(--text);line-height:1.25}
+  .stat span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+  section{padding:104px 0}
+  .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:start}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:44px}}
+  .about-grid p{color:var(--muted);margin-bottom:16px}
+  .about-grid p strong{color:var(--text);font-weight:500}
+
+  .stack-group{margin-bottom:20px}
+  .stack-group h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+                  color:var(--muted);font-weight:400;margin-bottom:9px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px}
+  .tag{font-family:var(--mono);font-size:.76rem;padding:5px 10px;background:var(--surface);
+       border:1px solid var(--line);border-radius:5px}
+
+  /* ---------- Projects ---------- */
+  .projects{display:grid;gap:20px}
+  .card{
+    display:grid;grid-template-columns:190px 1fr;gap:32px;align-items:center;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;
+    transition:border-color .25s,background .25s,transform .25s;
+  }
+  .card:hover{border-color:rgba(255,179,71,.4);background:var(--surface-2);transform:translateY(-3px)}
+  @media(max-width:760px){.card{grid-template-columns:1fr;gap:20px}}
+  .thumb{background:#0C1220;border:1px solid var(--line);border-radius:8px;padding:12px;display:block;width:100%;height:auto}
+  .card h3{font-family:var(--display);font-size:1.28rem;font-weight:500;letter-spacing:-.01em;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.94rem;margin-bottom:14px}
+  .card-meta{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+  .card-tags{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+  .card-links{display:flex;gap:16px;font-family:var(--mono);font-size:.78rem;color:var(--accent)}
+  .card-links a{border-bottom:1px solid rgba(255,179,71,.35);padding-bottom:2px;transition:border-color .2s}
+  .card-links a:hover{border-color:var(--accent)}
+
+  /* ---------- Certifications ---------- */
+  .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .cert{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;
+    display:flex;flex-direction:column;gap:7px;transition:border-color .25s,background .25s;
+  }
+  .cert:hover{border-color:rgba(255,179,71,.35);background:var(--surface-2)}
+  .cert .issuer{font-family:var(--mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+  .cert h3{font-size:1rem;font-weight:600;line-height:1.35}
+  .cert .meta{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:auto;padding-top:6px}
+  .cert .verify{font-family:var(--mono);font-size:.75rem;color:var(--muted);
+                border-bottom:1px solid rgba(255,255,255,.18);align-self:flex-start;
+                padding-bottom:2px;transition:color .2s,border-color .2s}
+  .cert .verify:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* ---------- Timeline ---------- */
+  .timeline{border-left:1px solid var(--line)}
+  .entry{display:grid;grid-template-columns:130px 1fr;gap:26px;padding:0 0 34px 28px;position:relative}
+  .entry::before{content:"";position:absolute;left:-4.5px;top:9px;width:8px;height:8px;border-radius:50%;
+                 background:var(--bg);border:1px solid var(--muted)}
+  .entry.now::before{background:var(--accent);border-color:var(--accent)}
+  @media(max-width:640px){.entry{grid-template-columns:1fr;gap:6px}}
+  .year{font-family:var(--mono);font-size:.8rem;color:var(--muted);padding-top:3px}
+  .entry h3{font-size:1.02rem;font-weight:600;margin-bottom:3px}
+  .entry .where{font-size:.89rem;color:var(--accent);margin-bottom:8px}
+  .entry p{font-size:.92rem;color:var(--muted)}
+  .entry .tools{font-family:var(--mono);font-size:.74rem;color:rgba(255,255,255,.35);margin-top:7px}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+  @media(max-width:860px){.two-col{grid-template-columns:1fr;gap:44px}}
+  .mini h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+           color:var(--muted);font-weight:400;margin-bottom:16px}
+  .mini li{list-style:none;color:var(--muted);font-size:.93rem;padding-left:18px;position:relative;margin-bottom:12px}
+  .mini li::before{content:"";position:absolute;left:0;top:.65em;width:6px;height:1px;background:var(--accent)}
+  .mini li b{color:var(--text);font-weight:500}
+
+  .contact{text-align:center;padding:112px 0}
+  .contact h2{font-family:var(--display);font-weight:700;letter-spacing:-.03em;
+              font-size:clamp(1.9rem,5vw,3rem);line-height:1.1;margin:16px 0 18px}
+  .contact p{color:var(--muted);max-width:48ch;margin:0 auto 34px}
+  .links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--line);padding:26px 0;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+  .foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+    .btn:hover,.card:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <div class="wrap bar">
+    <a href="#top" class="logo">kaoutar<b>.el-bannoudi</b></a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <canvas id="cluster" aria-hidden="true"></canvas>
+    <div class="wrap hero-grid">
+     <div>
+      <p class="eyebrow">hello · bonjour · مرحبا</p>
+      <h1>Kaoutar <em>El Bannoudi</em></h1>
+      <p class="role">Data Engineer · Machine Learning Engineer · AI Engineer</p>
+      <p class="lede">
+        I build <strong>cloud data pipelines</strong> on Azure and <strong>machine learning systems
+        that actually reach production</strong> — from raw ingestion to real-time inference.
+        Currently a PhD student in AI. Welcome to my portfolio.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn-solid" href="mailto:elbankawtar@gmail.com">Say hello</a>
+        <a class="btn btn-ghost" href="#projects">See my work</a>
+        <!-- Upload your PDF resume to the repository root as CV.pdf -->
+        <a class="btn btn-ghost" href="CV.pdf" target="_blank" rel="noopener">My CV</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>Azure</b><span>Primary cloud stack</span></div>
+        <div class="stat"><b>4 years</b><span>Hands-on experience</span></div>
+        <div class="stat"><b>PhD</b><span>AI research in progress</span></div>
+      </div>
+     </div>
+
+     <figure class="portrait">
+       <img src="/home/kaoutar/Desktop/portfolio/picture.png" alt="Portrait of Kaoutar El Bannoudi" width="760" height="949">
+     </figure>
+    </div>
+  </div>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-label reveal">About <span>01</span></div>
+      <div class="about-grid">
+        <div class="reveal">
+          <p>
+            I design and build the pipelines that turn scattered, messy sources into data a business
+            can actually use. My work covers ingestion from relational databases, files and APIs,
+            transformation through Bronze–Silver–Gold layers on Azure, and the modelling that makes
+            the result queryable.
+            <strong>A pipeline is only finished when it holds up under real data.</strong>
+          </p>
+          <p>
+            I came to data engineering through machine learning, and that shapes how I work: I have
+            deployed models on embedded hardware, automated training and release with CI/CD pipelines,
+            and served LLM-based systems as containerised APIs. I know what downstream consumers need
+            from a dataset because I have been one.
+          </p>
+          <p>
+            Alongside this, I am completing a PhD on AI applied to medical imaging at the SETIME
+            laboratory, and I teach the Deep Learning lab sessions of the "AI and Connected Objects"
+            Master's programme at Ibn Tofail University.
+          </p>
+          <p style="font-size:.92rem">
+            French: fluent · English: professional working proficiency · Arabic: native
+          </p>
+        </div>
+
+        <div class="reveal">
+          <div class="stack-group">
+            <h4>Data engineering &amp; pipelines</h4>
+            <div class="tags">
+              <span class="tag">Azure Data Factory</span><span class="tag">Databricks</span>
+              <span class="tag">Synapse Analytics</span><span class="tag">ADLS Gen2</span>
+              <span class="tag">PySpark</span><span class="tag">Medallion architecture</span>
+              <span class="tag">ETL / ELT</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h4>Databases &amp; modelling</h4>
+            <div class="tags">
+              <span class="tag">SQL / PL-SQL</span><span class="tag">PostgreSQL</span>
+              <span class="tag">MySQL</span><span class="tag">Oracle</span>
+              <span class="tag">SQL Server</span><span class="tag">MongoDB</span>
+              <span class="tag">Neo4j</span><span class="tag">Power BI</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h4>DevOps &amp; MLOps</h4>
+            <div class="tags">
+              <span class="tag">Docker</span><span class="tag">FastAPI</span>
+              <span class="tag">GitLab CI/CD</span><span class="tag">MLflow</span>
+              <span class="tag">Git</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h4>Programming</h4>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">SQL</span>
+              <span class="tag">PySpark</span><span class="tag">JavaScript</span><span class="tag">PHP</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h4>Machine learning &amp; deep learning</h4>
+            <div class="tags">
+              <span class="tag">PyTorch</span><span class="tag">TensorFlow/Keras</span>
+              <span class="tag">Scikit-learn</span><span class="tag">OpenCV</span>
+              <span class="tag">YOLO</span><span class="tag">NLP</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h4>Generative &amp; agentic AI</h4>
+            <div class="tags">
+              <span class="tag">LangChain</span><span class="tag">LangGraph</span>
+              <span class="tag">RAG</span><span class="tag">CrewAI</span>
+              <span class="tag">AutoGen</span><span class="tag">Vector stores</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-label reveal">Projects <span>02</span></div>
+      <div class="projects">
+
+        <article class="card reveal">
+          <svg class="thumb" viewBox="0 0 190 106" role="img" aria-label="Medallion architecture: bronze, silver and gold layers">
+            <rect x="14" y="16" width="46" height="74" rx="4" fill="rgba(176,122,60,.18)" stroke="#B07A3C"/>
+            <rect x="72" y="16" width="46" height="74" rx="4" fill="rgba(154,166,191,.14)" stroke="#9AA6BF"/>
+            <rect x="130" y="16" width="46" height="74" rx="4" fill="rgba(255,179,71,.16)" stroke="#FFB347"/>
+            <path d="M62 53h8M120 53h8" stroke="rgba(255,255,255,.4)" stroke-width="1.2"/>
+            <g font-family="monospace" font-size="7" fill="rgba(255,255,255,.55)" text-anchor="middle">
+              <text x="37" y="56">BRONZE</text><text x="95" y="56">SILVER</text><text x="153" y="56">GOLD</text>
+            </g>
+          </svg>
+          <div>
+            <h3>EcomDataEngine</h3>
+            <p>
+              End-to-end cloud data architecture on Microsoft Azure: an automated ETL pipeline built on
+              the Medallion architecture (Bronze–Silver–Gold) for ingesting, transforming and analysing
+              large-scale e-commerce data.
+            </p>
+            <div class="card-meta">
+              <div class="card-links"><a href="https://github.com/kaoutarelbannoudi" target="_blank" rel="noopener">Source code →</a></div>
+              <div class="card-tags">Azure · Databricks · Spark · Synapse · FastAPI</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <svg class="thumb" viewBox="0 0 190 106" role="img" aria-label="Knowledge graph powering a RAG pipeline">
+            <g stroke="rgba(255,255,255,.22)" stroke-width="1">
+              <line x1="95" y1="53" x2="42" y2="28"/><line x1="95" y1="53" x2="38" y2="76"/>
+              <line x1="95" y1="53" x2="150" y2="32"/><line x1="95" y1="53" x2="146" y2="78"/>
+              <line x1="42" y1="28" x2="38" y2="76"/><line x1="150" y1="32" x2="146" y2="78"/>
+            </g>
+            <circle cx="95" cy="53" r="9" fill="#FFB347"/>
+            <g fill="#4CC9F0"><circle cx="42" cy="28" r="5.5"/><circle cx="38" cy="76" r="5.5"/></g>
+            <g fill="#9B8CFF"><circle cx="150" cy="32" r="5.5"/><circle cx="146" cy="78" r="5.5"/></g>
+          </svg>
+          <div>
+            <h3>Chef Beldi — personalised nutrition agent</h3>
+            <p>
+              A recommendation agent built on LLMs and RAG pipelines that generates reliable meal plans
+              and recipes. Grounding retrieval in verified sources substantially reduces hallucinations.
+              Deployed as a containerised REST API.
+            </p>
+            <div class="card-meta">
+              <div class="card-links"><a href="https://github.com/kaoutarelbannoudi" target="_blank" rel="noopener">Source code →</a></div>
+              <div class="card-tags">RAG · LangGraph · LangChain · Neo4j · Docker</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <svg class="thumb" viewBox="0 0 190 106" role="img" aria-label="Current signal with a detected anomaly window">
+            <line x1="12" y1="53" x2="178" y2="53" stroke="rgba(255,255,255,.12)"/>
+            <path d="M12 53 Q22 28 32 53 T52 53 T72 53" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/>
+            <path d="M72 53 Q82 12 92 53 T112 53" fill="none" stroke="#FFB347" stroke-width="1.8"/>
+            <path d="M112 53 Q122 28 132 53 T152 53 T178 53" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/>
+            <rect x="72" y="14" width="40" height="78" rx="3" fill="rgba(255,179,71,.09)" stroke="rgba(255,179,71,.45)" stroke-dasharray="3 3"/>
+          </svg>
+          <div>
+            <h3>Fault diagnosis for induction motors</h3>
+            <p>
+              A predictive maintenance system (Industry 4.0) that analyses motor current signals with
+              deep learning. Models were optimised for real-time embedded inference on Raspberry Pi,
+              with CI/CD pipelines automating training, evaluation and deployment.
+            </p>
+            <div class="card-meta">
+              <div class="card-links"><a href="https://github.com/kaoutarelbannoudi" target="_blank" rel="noopener">Source code →</a></div>
+              <div class="card-tags">TensorFlow · PyTorch · Time series · GitLab CI/CD</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <svg class="thumb" viewBox="0 0 190 106" role="img" aria-label="Autonomous robot trajectory with obstacle detection">
+            <path d="M20 86 C60 86 58 40 96 40 C132 40 132 70 172 22" fill="none"
+                  stroke="rgba(255,255,255,.28)" stroke-width="1.4" stroke-dasharray="5 4"/>
+            <g fill="rgba(155,140,255,.5)">
+              <circle cx="70" cy="72" r="6"/><circle cx="118" cy="66" r="8"/><circle cx="140" cy="30" r="5"/>
+            </g>
+            <g stroke="rgba(76,201,240,.45)" stroke-width="1">
+              <line x1="96" y1="40" x2="70" y2="72"/><line x1="96" y1="40" x2="118" y2="66"/>
+              <line x1="96" y1="40" x2="126" y2="26"/><line x1="96" y1="40" x2="64" y2="30"/>
+            </g>
+            <circle cx="96" cy="40" r="6" fill="#FFB347"/>
+          </svg>
+          <div>
+            <h3>Autonomous warehouse delivery robot</h3>
+            <p>
+              A robot that navigates warehouse environments and delivers packages: trajectory following,
+              obstacle avoidance and sensor fusion across LiDAR and cameras. Simulated and validated in
+              complex industrial environments in Gazebo, with real-time supervision through RViz.
+            </p>
+            <div class="card-meta">
+              <div class="card-links"><a href="https://github.com/kaoutarelbannoudi" target="_blank" rel="noopener">Source code →</a></div>
+              <div class="card-tags">ROS2 · SLAM · Gazebo · RViz · OpenCV</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-label reveal">Experience <span>03</span></div>
+      <div class="timeline">
+
+        <div class="entry now reveal">
+          <div class="year">Oct 2025 — Jun 2026</div>
+          <div>
+            <h3>Adjunct Lecturer — MSc "AI and Connected Objects"</h3>
+            <div class="where">Ibn Tofail University, Faculty of Sciences — Kenitra</div>
+            <p>
+              Teaching the Deep Learning lab sessions: core architectures, model optimisation and
+              implementation on real datasets. Mentoring Master's students through problem formulation,
+              algorithm selection and performance evaluation.
+            </p>
+          </div>
+        </div>
+
+        <div class="entry reveal">
+          <div class="year">Mar — Aug 2025</div>
+          <div>
+            <h3>AI Engineering Intern</h3>
+            <div class="where">LABISEN Laboratory, ISEN Ouest / IREENA — University of Nantes, France</div>
+            <p>
+              Built an AI system for induction motor fault diagnosis based on current signal analysis,
+              applied to predictive maintenance. Designed and managed a real-time database, then deployed
+              the optimised models on embedded hardware.
+            </p>
+            <div class="tools">Python · TensorFlow/Keras · PyTorch · Time series · Embedded systems · GitLab CI/CD</div>
+          </div>
+        </div>
+
+        <div class="entry reveal">
+          <div class="year">Jun — Oct 2024</div>
+          <div>
+            <h3>AI Engineering Intern</h3>
+            <div class="where">Artéka — Amiens, France</div>
+            <p>
+              Developed and deployed real-time computer vision models for object detection and
+              segmentation. Handled preprocessing and augmentation of large datasets, plus model
+              architecture and hyperparameter optimisation.
+            </p>
+            <div class="tools">YOLO · PyTorch · OpenCV · Labelme · vLLM</div>
+          </div>
+        </div>
+
+        <div class="entry reveal">
+          <div class="year">Mar — Jun 2024</div>
+          <div>
+            <h3>AI Engineering Intern</h3>
+            <div class="where">SETIME Laboratory — Ibn Tofail University, Kenitra</div>
+            <p>
+              Designed an autonomous warehouse delivery robot covering navigation, obstacle avoidance
+              and sensor integration, simulated and validated in Gazebo with supervision through RViz.
+            </p>
+            <div class="tools">ROS2 · SLAM · Gazebo · RViz · Python</div>
+          </div>
+        </div>
+
+        <div class="entry reveal">
+          <div class="year">Apr — Sep 2022</div>
+          <div>
+            <h3>Web Developer</h3>
+            <div class="where">Ramaqs 4.0 — Kenitra</div>
+            <p>
+              Python backend development, REST API design for business logic and data processing,
+              plus relational database integration and performance tuning.
+            </p>
+            <div class="tools">Python · Flask · Django · SQL · REST APIs · GitLab CI/CD</div>
+          </div>
+        </div>
+
+        <div class="entry reveal">
+          <div class="year">Oct 2021 — Apr 2022</div>
+          <div>
+            <h3>Web Developer</h3>
+            <div class="where">ATR Maroc — Kenitra</div>
+            <p>
+              Built dynamic, responsive web applications in PHP/Laravel following the MVC architecture,
+              with interactive front-end features and REST APIs.
+            </p>
+            <div class="tools">PHP · Laravel · JavaScript · MySQL · Git</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CERTIFICATIONS ============
+       ✏️ EDIT THIS SECTION — replace each card with a real certificate.
+       Copy a whole <article class="cert"> block to add more, delete blocks you don't need.
+       The "Verify" link should point to the credential page (Coursera, Credly, Microsoft Learn...).
+       If a certificate has no public link, delete that <a class="verify"> line.
+  ============================================= -->
+  <section id="certifications">
+    <div class="wrap">
+      <div class="section-label reveal">Certifications <span>04</span></div>
+      <div class="certs">
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate title goes here</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+            One short line on what the certificate covers, or the key skills it validates.
+          </p>
+          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2025 · ID 000000</div>
+        </article>
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate title goes here</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+            One short line on what the certificate covers, or the key skills it validates.
+          </p>
+          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2025 · ID 000000</div>
+        </article>
+
+        <article class="cert reveal">
+          <div class="issuer">Issuing organisation</div>
+          <h3>Certificate title goes here</h3>
+          <p style="color:var(--muted);font-size:.9rem">
+            One short line on what the certificate covers, or the key skills it validates.
+          </p>
+          <a class="verify" href="#" target="_blank" rel="noopener">Verify credential →</a>
+          <div class="meta">Issued 2024 · ID 000000</div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION & RESEARCH ============ -->
+  <section id="education">
+    <div class="wrap">
+      <div class="section-label reveal">Education &amp; research <span>05</span></div>
+      <div class="two-col">
+
+        <div class="mini reveal">
+          <h4>Academic background</h4>
+          <div class="timeline" style="border-left:none">
+            <div class="entry" style="padding-left:0;grid-template-columns:1fr">
+              <div>
+                <h3>PhD in AI for Medical Imaging</h3>
+                <div class="where">SETIME Laboratory — Ibn Tofail University, Kenitra</div>
+                <p style="font-family:var(--mono);font-size:.8rem">October 2025 — present</p>
+              </div>
+            </div>
+            <div class="entry" style="padding-left:0;grid-template-columns:1fr">
+              <div>
+                <h3>MSc in Artificial Intelligence and Virtual Reality</h3>
+                <div class="where">Faculty of Sciences — Ibn Tofail University</div>
+                <p style="font-family:var(--mono);font-size:.8rem">2023 — 2025</p>
+              </div>
+            </div>
+            <div class="entry" style="padding-left:0;grid-template-columns:1fr">
+              <div>
+                <h3>BSc in Mathematical Sciences and Computer Science</h3>
+                <div class="where">Faculty of Sciences — Ibn Tofail University</div>
+                <p style="font-family:var(--mono);font-size:.8rem">2022 — 2023</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini reveal">
+          <h4>Activities &amp; community</h4>
+          <ul>
+            <li><b>ORASIS 2025 conference</b> — 20<sup>th</sup> edition, Le Croisic, France. Computer vision: submission, review and presentation of research work.</li>
+            <li><b>MASTIC Doctoral Days</b> — Nantes. Doctoral research methodology and academic networking.</li>
+            <li><b>"Multi-Agent AI and Game Theory" workshop</b> — FSK Winter School. Multi-agent systems and game theory applied to AI.</li>
+            <li><b>Communications Lead, Pragnomos Club</b> — Ibn Tofail University. Communication strategy and event promotion.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <p class="eyebrow reveal">Open to collaborations and opportunities</p>
+      <h2 class="reveal">Have an AI project that needs<br>to move from prototype to production?</h2>
+      <p class="reveal">
+        Research, freelance work, academic collaboration or an AI engineering role —
+        send me a message and I'll get back to you quickly.
+      </p>
+      <div class="links reveal">
+        <a class="btn btn-solid" href="mailto:elbankawtar@gmail.com">elbankawtar@gmail.com</a>
+        <a class="btn btn-ghost" href="https://github.com/kaoutarelbannoudi" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/kaoutar-el-bannoudi" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 — Kaoutar El Bannoudi</span>
+    <span>Kenitra, Morocco</span>
+  </div>
+</footer>
+
+<script>
+const hd = document.getElementById('hd');
+addEventListener('scroll', () => hd.classList.toggle('scrolled', scrollY > 20), {passive:true});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* Point cloud converging into clusters on load */
+(function(){
+  const cv = document.getElementById('cluster');
+  const ctx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const COLORS = ['#FFB347','#4CC9F0','#9B8CFF'];
+  let w = 0, h = 0, pts = [], t = 0, start = null;
+
+  const gauss = () => (Math.random()+Math.random()+Math.random()+Math.random()-2)/2;
+
+  function build(){
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = w*dpr; cv.height = h*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    const centers = [{x:.56*w,y:.20*h},{x:.97*w,y:.50*h},{x:.64*w,y:.88*h}];
+    const spread = Math.min(w,h)*0.13;
+    const n = w < 640 ? 110 : 220;
+
+    pts = Array.from({length:n}, () => {
+      const k = Math.floor(Math.random()*3);
+      return {
+        k, sx:Math.random()*w, sy:Math.random()*h,
+        tx: centers[k].x + gauss()*spread*1.6,
+        ty: centers[k].y + gauss()*spread,
+        r: 1 + Math.random()*1.8, ph: Math.random()*Math.PI*2
+      };
+    });
+  }
+
+  const ease = p => 1 - Math.pow(1-p, 3);
+
+  function draw(time){
+    ctx.clearRect(0,0,w,h);
+    const e = ease(t);
+    for (const p of pts){
+      const d = still ? 0 : 1;
+      const x = p.sx + (p.tx - p.sx)*e + Math.sin(time/2600 + p.ph)*4*e*d;
+      const y = p.sy + (p.ty - p.sy)*e + Math.cos(time/3100 + p.ph)*3*e*d;
+      ctx.globalAlpha = .18 + e*.42;
+      ctx.fillStyle = COLORS[p.k];
+      ctx.beginPath(); ctx.arc(x, y, p.r, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function loop(time){
+    if (start === null) start = time;
+    t = Math.min((time - start)/2400, 1);
+    draw(time);
+    requestAnimationFrame(loop);
+  }
+
+  build();
+  if (still){ t = 1; draw(0); } else requestAnimationFrame(loop);
+
+  let rz;
+  addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => { build(); if (still){ t=1; draw(0); } }, 180);
+  });
+})();
+</script>
+</body>
+</html>
